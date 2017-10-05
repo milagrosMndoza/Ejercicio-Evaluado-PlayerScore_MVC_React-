@@ -1,3 +1,4 @@
+"use strict"
 class Model {
   constructor(PLAYERS) {
     this.players = [
@@ -56,7 +57,61 @@ class Model {
       this.notify();
     }
 }
+/*******************************************************/
+class Timer extends React.Component {
+    constructor (props) {
+    super (props);
+    this.state = {
+      time: 0
+    }
+}
+render () {
+    const {title} = this.props;
+    const start = (e) => {
+      
+      if(e.target.textContent == 'start'){
+        e.target.textContent = 'stop';
+        
+        this.timeStart();
+      }
+      else{
+        e.target.textContent = 'start';
+        this.timeStop();
+      }
+    }
+    const reset = (e) => {
+      this.timeReset();
+    }
+    return (
+            <div className="stopwatch-time">
+              
+              <span> {this.state.time}</span><br/>
+              <button className= "stopwatch" onClick={start}>start</button>
+              <button className= "stopwatch" onClick={reset}>reset</button>
+            </div>
+           
+     );
+  }
+ 
+  timeStart () {
+    this.timer = setInterval( () => {
+    this.setState ({
+      time : this.state.time+1
+    });}, 1000);
+  }
 
+  timeStop () {
+    clearInterval(this.timer);
+  }
+  timeReset(){
+    clearInterval(this.timer);
+    this.setState ({
+      time :0
+    });
+  }
+}
+ 
+/*******************************************************/
 const PlayerApp = ({ title, model }) => {
   const Header = (
     <div className="header">
@@ -73,12 +128,11 @@ const PlayerApp = ({ title, model }) => {
         </table>
       </div>
       <div className="col-sm-4.5">
+      
         <div className="stopwatch">
           <h2>STOPWATCH</h2>
-          <h1 className="stopwatch-time">0</h1>
-          <button>start</button>
-          <button>reset</button>
-        </div>
+           <Timer/>
+         </div>
       </div>
     </div>
   );
@@ -119,6 +173,7 @@ const PlayerApp = ({ title, model }) => {
         {Header}
         {PlayerList}
         {PlayerForm}
+        
       </div>
     </div>
   );
